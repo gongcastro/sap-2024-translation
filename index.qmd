@@ -1,0 +1,548 @@
+```{r setup}
+library(tibble)
+library(tidyr)
+library(ggplot2)
+library(ggdist)
+library(dplyr)
+library(patchwork)
+library(praatpicture)
+library(showtext)
+
+font_add_google("Roboto Condensed", "Roboto")
+windowsFonts("Roboto Condensed" = windowsFont("Roboto Condensed"))
+
+html_tag_audio <- function(file, type = c("wav")) {
+  type <- match.arg(type)
+  htmltools::tags$audio(
+    controls = "",
+    htmltools::tags$source(
+      src = file,
+      type = glue::glue("audio/{type}", type = type)
+    )
+  )
+}
+
+clrs <- c("#ea6212", "#ff001e", "#781478")
+```
+
+
+---
+
+![{{< video assets/tiktok.mp4 >}}]()
+
+https://www.youtube.com/watch?v=8FXQ38-ZQK0&t=11s
+
+Tiktok: \\@kegan_stiles
+
+---
+
+{{< video assets/benny-lava.mp4 >}}]
+
+https://www.youtube.com/watch?v=sdyC1BrQd6g&list=PL217-5XHnpx1Tb3FRXqWmPZX2UV4m2I-2
+
+---
+
+{{< video assets/soramimi.mp4 >}}
+
+https://www.youtube.com/watch?v=7bYG7duRYV0&t=1s
+
+---
+
+
+{{< video assets/yunomi.mp4 >}}]
+
+https://www.youtube.com/watch?v=EW_Q4IYpbWE
+
+
+## Homophonic translation
+
+- Words/phrases in one language are translated to similar-sounding phrases **without necessarility preserving its meaning**
+- Spontaneous or intentional [e.g., poetry, @gasparov2006semen]
+- Homophonic translation: literary figure, psycholinguistic phenomenon
+
+::: box
+What are the psycholinguistic foundations of spontaneous homophonic translation
+:::
+
+::: {.notes}
+:::
+
+---
+
+## Homophonic translation
+
+@otake2007interlingual: analysed 194 instances of Soramimi broadcaster between 1992 and 2007 by the TV show *Soramimi hour*
+
+English song lyrics to words and phrases in Japanese: phrases (96%), single words (4%).
+
+English phonetic features preserved with varying degrees in their Japanese translations
+
+Three main phonological processes involved:
+
+* **Insertion**: *cry* /\textipa{kraI}/ to *kurai*, /\textipa{kuRai}/ [dark]
+* **Deletion**: *go*, /\textipa{goU}/ to *go*, /go/ [go]
+* **Alternation**: *low*, /\textipa{loU}/ to *rou*, /\textipa{Roo}/ [wax]
+
+Japanese listeners accommodating the strings of English sounds to the Japanese phoneme inventory and Japanese phonotactics [@peperkamp2008perceptual; @dupoux1999epenthetic].
+
+::: {.notes}
+:::
+
+## Phonological similarity
+
+* Characterise the psycholinguistic bases of homophonic translation
+* What leads to a correct homophonic translation (i.e., homophonic translation with preservation of meaning)
+* Interplay between phonological similarity and phonological neighbourhood density
+
+::: box
+English speaker listens to to Dutch word /\textipa{"pINgUIn}/ (*pinguin*)
+English translation: /\textipa{"pENgwIn}/ (penguin)
+
+Given enough phonological similarity (**cognateness**), correct translation?
+:::
+
+## Phonological neighbourhood density
+
+::: box
+English speaker listens to to Dutch word /\textipa{"pINgUIn}/ (*pinguin*)
+English translation: /\textipa{"pENgwIn}/ (penguin)
+
+Given enough phonological similarity (**cognateness**), correct translation?
+:::
+
+# Experiment 1
+
+English participants listening to Catalan or Spanish
+
+## Experiment 1
+
+Newborns (and adults) preferentially parse the speech signal into [syllable-sized units]{style="background-color: #e3e1e1;"} [e.g, @bijeljac19934; @flo2022sleeping; @luo2007phase; @jusczyk1987representation; @bertoncini1988investigation]
+
+![From @flo2022sleeping.](assets/entrainment.png)
+
+::: {.notes}
+- Syllables seem to be specially important during the first stages of language acquisition
+- Newborns preferentially parse speech into syllables (as opposed to individual phonemes, words, or phrases)
+- What makes syllables so special? 
+:::
+
+## Participants
+
+::: {.columns}
+::: {.column width="40%"}
+![](assets/structure.png)
+:::
+::: {.column width="60%"}
+:::
+:::
+
+::: {.notes}
+- The universal structure of a syllable is made of three elements
+- A mandatory nucleus: this is a high-sonority speech sound (predominantly a vowel)
+- Perhaps an onset, made of one or more consonants
+- Perhaps a coda, made of one or more consonant
+:::
+
+## Task design
+
+::: {.columns}
+::: {.column width="40%"}
+![](assets/structure.png)
+:::
+::: {.column width="60%"}
+|Structure |Onset  |Nucleus  |Coda  |
+|----------|:-----:|:-------:|:----:|
+| V        |       |a        |      |
+| CV       | t     |a        |      |
+| CVC      | t     |a        |n     |
+| VC       |       |a        |n     |
+:::
+:::
+
+::: {.notes}
+- Same examples of syllables
+:::
+
+
+## Stimuli
+
+| Structure | Japanese     | Spanish          | English         |
+|-----------|--------------|------------------|-----------------|
+|V          | [u]{style="background-color: #e3e1e1;"}.mi     | [o]{style="background-color: #e3e1e1;"}.jo         | [a]{style="background-color: #e3e1e1;"}.ny        |
+|CV         | [ya]{style="background-color: #e3e1e1;"}.ma.ha | [ca]{style="background-color: #e3e1e1;"}.sa        | [fai]{style="background-color: #e3e1e1;"}.ry      | 
+|CVC        | [hon]{style="background-color: #e3e1e1;"}.da   | [rin]{style="background-color: #e3e1e1;"}.cón      | [con]{style="background-color: #e3e1e1;"}.trol    |
+|CCVC       |              | [fres]{style="background-color: #e3e1e1;"}.co      | [fresh]{style="background-color: #e3e1e1;"}       |
+|CCVCC      |              | [trans]{style="background-color: #e3e1e1;"}.por.te | [shrink]{style="background-color: #e3e1e1;"}     |
+|CCCVCCC    |              |                  | [strengths]{style="background-color: #e3e1e1;"}   |
+
+: Adapted from Özer (2024).
+
+::: {.notes}
+- Not all syllabic structures are possible in all languages
+- Some languages impose stricter phonotactical constraints on the specific sounds and number of sounds that can occur at onset or coda
+:::
+
+
+## Data analysis
+
+Can you chunk this word into syllables?
+
+> /likla/
+
+. . .
+
+::: box
+**Maximal Onset Principle (MOP)**:
+
+Consonants are preferably grouped at syllabic onset
+:::
+
+* [MOP+]{style="background-color: #ea6212; color: white"}: CV.CCV - /li.kla/
+* [MOP-]{style="background-color: #781478; color: white"}: CVC.CV - /lik.la/
+
+::: {.notes}
+- However, some constraints to syllabic structure seem to be universal
+- Universal: most, if not all languages, show a preference for following some specific constraints
+- The aim of this project is to investigate the possible role of these universals as an early mechanism for syllabification
+:::
+
+## Results
+
+Which of these syllables sound good to you?
+
+> /blif/ vs. /lbif/
+
+. . .
+
+::: box
+**Sonority Sequencing Principle (SSP)**:
+
+Sonority increases at onset, peaks at nucleus, decreases in coda
+:::
+
+```{r fig-ssp-blif}
+#| label: fig-ssp-blif
+#| fig-height: 1.5
+#| fig-width: 6
+tribble(
+  ~position, ~phoneme, ~sonority,
+  "Onset", "b", 4,
+  "Onset", "l", 10,
+  "Nucleus", "i", 17,
+  "Coda", "f", 7
+) |>
+  mutate(phoneme = factor(phoneme, levels = phoneme, ordered = TRUE)) |>
+  ggplot(aes(phoneme, sonority, fill = reorder(position, desc(position)))) +
+  geom_col(colour = "white") +
+  geom_line(aes(group = 1)) +
+  geom_point(show.legend = FALSE) +
+  tribble(
+    ~position, ~phoneme, ~sonority,
+    "Onset", "l", 10,
+    "Onset", "b", 4,
+    "Nucleus", "i", 15,
+    "Coda", "f", 7
+  ) |>
+  mutate(phoneme = factor(phoneme, levels = phoneme, ordered = TRUE)) |>
+  ggplot(aes(phoneme, sonority, fill = reorder(position, desc(position)))) +
+  geom_col(colour = "white") +
+  geom_line(aes(group = 1)) +
+  geom_point(show.legend = FALSE) +
+  theme(axis.title.y = element_blank()) +
+  plot_layout(nrow = 1, guides = "collect") &
+  labs(x = "Phoneme", y = "Sonority Index") &
+  scale_fill_manual(values = clrs) &
+  theme_ggdist(base_family = windowsFonts()$`Roboto Condensed`) &
+  theme(
+    legend.position = "right",
+    axis.title.x = element_blank(),
+    legend.title = element_blank(),
+    plot.background = element_rect(fill = NA)
+  )
+```
+
+::: {.notes}
+- However, some constraints to syllabic structure seem to be universal
+- Universal: most, if not all languages, show a preference for following some specific constraints
+- Both universals determine to a large extent the position of syllabic boundaries, and the order of the segments that make up a syllable
+:::
+
+
+
+## Discussion
+
+* Do newborns rely on MOP and SSP to detect syllable boundaries?
+
+> Syllables as an entry gate to language
+
+. . .
+
+* Are these mechanisms shared with non-human animals? (e.g., production)
+
+> Syllables as phylogenetically relevant linguistic units
+
+. . .
+
+
+::: {.notes}
+- The aim of this project is to investigate:
+  1) The possible role of these universals as an early mechanism for syllabification
+  2) The extent to which these mechanisms are shared with other non-human animals
+- The Maximal Onset Principle (MOP) and the Sonority Sequencing Principle (SSP)
+- We will also investigate whether a non-human animal species (Long-Evans rats), which do not develop language, are also sensitive to any of these principles
+:::
+
+## The Gates to Language (GALA) project
+
+Two lines of research: MOP and SSP
+
+* Neonates (fNIRS)
+* Infants (fNIRS, eye-tracking, behaviour)
+* Adults (behavioural)
+* Long-Evans rats (behavioural)
+
+
+# Experiment 2
+
+Spanish participants listening to Catalan
+
+## Experiment 2
+
+::: box
+Consonants are preferably grouped at syllable onset.
+:::
+
+* [MOP+]{style="background-color: #ea6212; color: white"}: CV.CCV - /li.kla/  
+* [MOP-]{style="background-color: #781478; color: white"}: CVC.CV - /lik.la/
+
+::: {.notes}
+- The first universal we will investigate is the Maximal Onset Principle (MOP)
+- This principle states that "consonants" are preferably grouped at syllable onset
+- This principle constrains the position of syllabic boundaries
+- If neonates are sensitive to violations of the MOP, it would suggest that they might be using the MOP to syllabify the speech signal from birth
+:::
+
+
+## Participants
+
+* Hearing, full term neonates (fNIRS) and 6-10 mo infants (fNIRS + behavioural)
+* Born/living in the Metropolitan Area of Barcelona (Spain)
+* Mostly Catalan and/or Spanish linguistic background
+
+::: {.notes}
+- We will run an experimental series that involves neonates and infants
+- Neonates will be tested using fNIRS, while infants will be tested using fNIRS and behavioural tasks (like the HeadTurn Preference Procedure)
+- I will focus on the fNIRS testing of neonates and infants, as they follow the same task design
+- Ideally, we'd like to test up to 50 participants per experiment, although power analysis is pending
+- Most of our participants will have a Catalan and/or Spanish background
+:::
+
+
+## Task design
+
+* NIRSport2 (NIRx), CW 760 nm & 850 nm
+* Sampling frequency 20.345 Hz (~0.05 s samples)
+* NIRScap: 8 channels LH, 8 channels RH
+* ROIs: L and R temporal regions
+* Crib testing in neonates, parents' lap in infants (watching cartoons)
+* MNE-NIRS (Python): (1) OD, (2) motion correction (TDDR), (3) band-pass filtering, (4) block segmentation, (5) block averaging, (6) block rejection, (7) participant rejection.
+
+## Stimuli
+
+**Familiarisation/discrimination task:**
+
+1) Familiarise participants with disyllabic CVCCV words
+    - 10 blocks, 6 words each (working on generating as many words as possible)
+
+. . .
+
+2) Test discrimination of artificially segmented familiar words as [MOP+]{style="background-color: #ea6212; color: white"} (CV.CCV) vs. [MOP-]{style="background-color: #781478; color: white"} (CVC.CV):
+    - 4 alternating blocks ([MOP+]{style="background-color: #ea6212; color: white"}/[MOP-]{style="background-color: #781478; color: white"})
+    - 4 non-alternating blocks (2 [MOP+]{style="background-color: #ea6212; color: white"} blocks, 2 [MOP-]{style="background-color: #781478; color: white"} blocks)
+
+## Results
+
+::: box
+**CVCCV words**: Onset + Vowel + Consonant cluster (CC) + Vowel
+:::
+
+. . .
+
+::: columns
+:::: {.column width="40%"}
+| [MOP+]{style="background-color: #ea6212; color: white"} (CV.CCV) | [MOP-]{style="background-color: #781478; color: white"} (CVC.CV)|
+|:-------------:|:------------:|
+|li.kla         |lik.la        |
+|ro.tri         |rot.ri        |
+|po.glu         |pog.lu        |
+
+::::
+:::: {.column width="60%"}
+Some constraints:
+
+- [MOP+]{style="background-color: #ea6212; color: white"}: CC follows **SSP**
+- [MOP+]{style="background-color: #ea6212; color: white"}: CC is phonotactical at onset in speakers' and participants' native language(s)
+- [MOP-]{style="background-color: #781478; color: white"}: C is allowed in coda in speakers' and participants' native language(s)
+::::
+:::
+
+
+## Discussion
+
+![](assets/fam-mop.png){width=100%}
+
+
+# Experiment 3
+
+English participants listening to Catalan or Spanish
+Now with confidence reports
+
+## Experiment 3
+
+- Natural speaker or synthesised speech (e.g., MBROLA)?
+- Variability vs. repetition? More vs. less consonant clusters
+- Linguistic experience at 8-12 months?
+- Familiarisation phase: how many blocks is enough/too much?
+- fNIRS recording during familiarisation? (e.g., capping in between phases)
+
+Research line 2
+
+## Participants
+
+::: columns
+:::: {.column width="40%" .incremental}
+
+> In a syllable, sonority increases toward the peak and decreases toward the margins. [@morelli2003relative]
+
+::::
+:::: {.column width="60%"}
+The biomecanics of the phonatory system constrain the properties of the acoustic signal of (exhalated) animal vocalisations.
+
+![From @tierney2011motor](assets/birds.png)
+::::
+:::
+
+---
+
+```{r fig-ssp-bran}
+#| label: fig-ssp-bran
+#| fig-cap: "Sonority Sequencing Principle. Sonority values from @parker201149"
+#| fig-height: 4
+#| fig-width: 6
+tribble(
+  ~position, ~phoneme, ~sonority,
+  "Onset", "b", 1,
+  "Onset", "ɾ", 10,
+  "Nucleus", "a", 17,
+  "Coda", "n", 7
+) |>
+  mutate(phoneme = factor(phoneme, levels = phoneme, ordered = TRUE)) |>
+  ggplot(aes(phoneme, sonority, fill = reorder(position, desc(position)))) +
+  geom_col(colour = "white") +
+  geom_line(aes(group = 1)) +
+  geom_point(show.legend = FALSE) +
+  labs(x = "Phoneme", y = "Sonority Index") +
+  scale_fill_manual(values = clrs) +
+  theme_ggdist() +
+  theme(
+    legend.position = "top",
+    axis.title.x = element_blank(),
+    legend.title = element_blank(),
+    plot.background = element_rect(fill = NA)
+  )
+```
+
+## Task design
+
+```{r fig-ssp-bran-grid}
+#| label: fig-sspl-bran-grid
+#| fig-cap: "Sonority profile of the syllable 'bran'"
+praatpicture::praatpicture(
+  "assets/bran.wav",
+  intensity_plotOnSpec = TRUE,
+  intensity_color = clrs[1],
+  font.axis = 2,
+  spec_colors = RColorBrewer::brewer.pal(9, "Greys")[1:7],
+  font = 2,
+  pitch_freqRange = c(0, 700),
+  proportion = c(50, 25, 25),
+  family = "fira",
+  lwd = 2,
+  wave_color = clrs[1],
+)
+```
+
+## Stimuli
+
+```{r fig-ssp-lbif}
+#| label: fig-ssp-lbif
+#| fig-cap: "Sonority Sequencing Principle. Sonority values from @parker201149"
+tribble(
+  ~position, ~phoneme, ~sonority,
+  "Onset", "l", 9,
+  "Onset", "b", 1,
+  "Nucleus", "i", 15,
+  "Coda", "f", 3
+) |>
+  mutate(phoneme = factor(phoneme, levels = phoneme, ordered = TRUE)) |>
+  ggplot(aes(phoneme, sonority, fill = reorder(position, desc(position)))) +
+  geom_col(colour = "white") +
+  geom_line(aes(group = 1)) +
+  geom_point(show.legend = TRUE) +
+  labs(x = "Phoneme", y = "Sonority Index") +
+  scale_fill_manual(values = clrs) +
+  theme_ggdist() +
+  theme(
+    legend.position = "top",
+    axis.title.x = element_blank(),
+    legend.title = element_blank(),
+    plot.background = element_rect(fill = NA)
+  )
+```
+
+## Results
+
+```{r fig-ssp-lbif-grid}
+#| label: fig-sspl-lbif-grid
+#| fig-cap: "Sonority profile of the syllable 'lbif'"
+praatpicture::praatpicture(
+  "assets/lbif.wav",
+  intensity_plotOnSpec = TRUE,
+  intensity_color = clrs[1],
+  font.axis = 2,
+  spec_colors = RColorBrewer::brewer.pal(9, "Greys")[1:7],
+  font = 2,
+  pitch_freqRange = c(0, 700),
+  proportion = c(50, 25, 25),
+  family = "fira",
+  lwd = 2,
+  wave_color = clrs[1],
+)
+```
+
+## Discussion
+
+[Proposal]{style="background-color: #e3e1e1;"}:
+
+1) Syllables are biologically relevant linguistic units
+2) Language processing at birth is constrained by phylogenetically acquired perception mechanisms (e.g., SSP) [@gomez2014language]
+
+. . .
+
+[Hypotheses]{style="background-color: #e3e1e1;"}:
+
+* Sensitivity to SSP plays a role beyond language (non-linguistic sounds)
+* Non-human animals (Long-Evans rats) are sensitive to (violations of) the SSP
+
+# General discussion
+
+* Hearing, full term neonates (fNIRS) and 6-10 mo infants (fNIRS + behavioural)
+* Born/living in the Metropolitan Area of Barcelona (Spain)
+* Mostly Catalan and/or Spanish linguistic background
+
+    
+## {background-image="assets/thanks.png"}
+
+## References
+
+

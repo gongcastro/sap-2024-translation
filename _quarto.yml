@@ -1,0 +1,52 @@
+title: "Mechanisms for parsing speech into syllables in early infancy"
+format:
+  prezconf-revealjs:
+    self-contained: true
+    from: markdown+emoji
+    transition: fade
+    progress: true
+    preload-iframes: true
+    link-external-newwindow: true
+    #qr-code: assets/img/qr-code.png
+    github: gongcastro
+    twitter: gongcastro
+    date: 2024/09/24
+    conference: sap2024translation
+
+  pptx: default
+
+
+resources: 
+    - "assets/enveloped_click_bran.wav"
+    - "assets/enveloped_click_lbif.wav"
+    
+
+author:
+  - name: "Gonzalo García-Castro"
+    orcid: 0000-0002-8553-4209
+    institute:
+      - Center for Brain and Cognition, Universitat Pompeu Fabra
+      - Institut de Recerca Sant Joan de Déu
+  - name: Serene Siow
+    orcid: 0000-0001-6482-2191
+    institute: Department of Experimental Psychology, University of Oxford
+  - name: Kim Plunkett
+    orcid: 0000-0003-0216-7480
+    institute: Department of Experimental Psychology, University of Oxford
+  - name: Nuria Sebastian-Galles
+    orcid: 0000-0001-6938-2498
+    email: nuria.sebastian@upf.edu
+    institute: Center for Brain and Cognition, Universitat Pompeu Fabra
+    
+echo: false
+warning: false
+fig-dpi: 800
+  
+bibliography: assets/references.bib
+cls: assets/apa7.csl
+scrollable: true
+show-slide-number: all
+slide-number: c
+date: "19/11/2024"
+conference: SAP seminar presentation
+
