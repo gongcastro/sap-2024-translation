@@ -12,14 +12,6 @@ format:
     twitter: gongcastro
     date: 2024/09/24
     conference: sap2024translation
-    resources: 
-    - "assets/benny-lava.mp4"
-    - "assets/soramimi.mp4.wav"
-    - "assets/tiktok.mp4.wav"
-    - "assets/yunomi.mp4.wav"
-
-  pptx: default
-
 
 resources: 
     - "assets/benny-lava.mp4"
