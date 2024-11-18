@@ -1,7 +1,7 @@
-title: "Mechanisms for parsing speech into syllables in early infancy"
+title: "The role of cognateness in native spoken word recognition"
 format:
   prezconf-revealjs:
-    self-contained: true
+    self-contained: false
     from: markdown+emoji
     transition: fade
     progress: true
@@ -12,14 +12,20 @@ format:
     twitter: gongcastro
     date: 2024/09/24
     conference: sap2024translation
+    resources: 
+    - "assets/benny-lava.mp4"
+    - "assets/soramimi.mp4.wav"
+    - "assets/tiktok.mp4.wav"
+    - "assets/yunomi.mp4.wav"
 
   pptx: default
 
 
 resources: 
-    - "assets/enveloped_click_bran.wav"
-    - "assets/enveloped_click_lbif.wav"
-    
+    - "assets/benny-lava.mp4"
+    - "assets/soramimi.mp4.wav"
+    - "assets/tiktok.mp4.wav"
+    - "assets/yunomi.mp4.wav"
 
 author:
   - name: "Gonzalo García-Castro"

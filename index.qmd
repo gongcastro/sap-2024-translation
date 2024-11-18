@@ -2,11 +2,17 @@
 library(tibble)
 library(tidyr)
 library(ggplot2)
+library(gt)
 library(ggdist)
 library(dplyr)
 library(patchwork)
-library(praatpicture)
+library(readr)
 library(showtext)
+library(purrr)
+library(janitor)
+library(tidybayes)
+library(rstan)
+library(tinytable)
 
 font_add_google("Roboto Condensed", "Roboto")
 windowsFonts("Roboto Condensed" = windowsFont("Roboto Condensed"))
@@ -22,21 +28,41 @@ html_tag_audio <- function(file, type = c("wav")) {
   )
 }
 
+theme_set(theme_ggdist() +
+  theme(panel.grid.major = element_line(
+    colour = "grey",
+    linetype = "dotted"
+  )))
+
+participants <- read_csv(file.path("data", "participants.csv"), show_col_types = FALSE)
+exp_participants <- read_csv(file.path("data", "exp_participants.csv"), show_col_types = FALSE)
+quest_participants <- read_csv(file.path("data", "quest_participants.csv"), show_col_types = FALSE)
+
+exp_responses <- read_csv(file.path("data", "exp_responses.csv"), show_col_types = FALSE)
+quest_responses <- read_csv(file.path("data", "quest_responses.csv"), show_col_types = FALSE)
+
+dataset_1 <- read_csv(file.path("data", "dataset_1.csv"), show_col_types = FALSE)
+dataset_2 <- read_csv(file.path("data", "dataset_2.csv"), show_col_types = FALSE)
+dataset_3 <- read_csv(file.path("data", "dataset_3.csv"), show_col_types = FALSE)
+exp_1_m0 <- readRDS(file.path("data", "exp_1_m0.rds"))
+exp_2_m0 <- readRDS(file.path("data", "exp_2_m0.rds"))
+exp_3_m0 <- readRDS(file.path("data", "exp_3_m0.rds"))
+exp_12_m0 <- readRDS(file.path("data", "exp_12_m0.rds"))
+
+
 clrs <- c("#ea6212", "#ff001e", "#781478")
 ```
 
 
 ---
 
-![{{< video assets/tiktok.mp4 >}}]()
+{{< video assets/tiktok.mp4 >}}
 
-https://www.youtube.com/watch?v=8FXQ38-ZQK0&t=11s
-
-Tiktok: \\@kegan_stiles
+Source: https://www.youtube.com/watch?v=8FXQ38-ZQK0&t=11s, Tiktok: kegan_stiles
 
 ---
 
-{{< video assets/benny-lava.mp4 >}}]
+{{< video assets/benny-lava.mp4 >}}
 
 https://www.youtube.com/watch?v=sdyC1BrQd6g&list=PL217-5XHnpx1Tb3FRXqWmPZX2UV4m2I-2
 
@@ -49,7 +75,7 @@ https://www.youtube.com/watch?v=7bYG7duRYV0&t=1s
 ---
 
 
-{{< video assets/yunomi.mp4 >}}]
+{{< video assets/yunomi.mp4 >}}
 
 https://www.youtube.com/watch?v=EW_Q4IYpbWE
 
@@ -57,11 +83,10 @@ https://www.youtube.com/watch?v=EW_Q4IYpbWE
 ## Homophonic translation
 
 - Words/phrases in one language are translated to similar-sounding phrases **without necessarility preserving its meaning**
-- Spontaneous or intentional [e.g., poetry, @gasparov2006semen]
-- Homophonic translation: literary figure, psycholinguistic phenomenon
+- Intentional (literary figure, e.g., poetry) [@gasparov2006semen] or **spontaneous**
 
 ::: box
-What are the psycholinguistic foundations of spontaneous homophonic translation
+What are the psycholinguistic foundations of spontaneous homophonic translation?
 :::
 
 ::: {.notes}
@@ -71,475 +96,864 @@ What are the psycholinguistic foundations of spontaneous homophonic translation
 
 ## Homophonic translation
 
-@otake2007interlingual: analysed 194 instances of Soramimi broadcaster between 1992 and 2007 by the TV show *Soramimi hour*
+**Otake (2017)**: analysed 194 instances of Soramimi broadcaster between 1992 and 2007 by the TV show *Soramimi hour*
 
-English song lyrics to words and phrases in Japanese: phrases (96%), single words (4%).
+* English song lyrics to words (4%) and phrases (96%) in Japanese
+* English phonetic features preserved with **varying degrees** in their Japanese translations
 
-English phonetic features preserved with varying degrees in their Japanese translations
-
-Three main phonological processes involved:
-
-* **Insertion**: *cry* /\textipa{kraI}/ to *kurai*, /\textipa{kuRai}/ [dark]
-* **Deletion**: *go*, /\textipa{goU}/ to *go*, /go/ [go]
-* **Alternation**: *low*, /\textipa{loU}/ to *rou*, /\textipa{Roo}/ [wax]
-
-Japanese listeners accommodating the strings of English sounds to the Japanese phoneme inventory and Japanese phonotactics [@peperkamp2008perceptual; @dupoux1999epenthetic].
 
 ::: {.notes}
 :::
 
-## Phonological similarity
+## Homophonic translation
 
-* Characterise the psycholinguistic bases of homophonic translation
-* What leads to a correct homophonic translation (i.e., homophonic translation with preservation of meaning)
-* Interplay between phonological similarity and phonological neighbourhood density
+**Otake (2017)**: Japanese listeners accommodated English input strings to Japanese phonology [@peperkamp2008perceptual; @dupoux1999epenthetic].
+
+<br>
+
+| Process      | English word | Japanese word                     |
+|--------------|--------------|-----------------------------------|
+| Insertion    | cry /ˈkɹaɪ/  | *kurai* (くらい) /ˈkɯ̟ɾa̠i/ [dark]    |
+| Deletion     | go /ˈɡoʊ/    | *go* (*ご) /ˈɡo̞/ [go (board game)] |
+| Alternation  | low /ˈloʊ/   | *rou* (ろう) /ˈɾo̞ː/ [wax]          |
+
+## Our study
+
+* Characterise the **psycholinguistic bases** of homophonic translation
+* What leads to a **correct homophonic translation** (i.e., homophonic translation with preservation of meaning)?
+* Interplay between **phonological similarity** and **phonological neighbourhood density**
+
+## Our study
 
 ::: box
-English speaker listens to to Dutch word /\textipa{"pINgUIn}/ (*pinguin*)
-English translation: /\textipa{"pENgwIn}/ (penguin)
-
-Given enough phonological similarity (**cognateness**), correct translation?
+1. More **phonological similarity** (i.e., cognateness), higher probability of correct translation
+2. More **phonological neighbours**, lower probability of correct translation
 :::
+
+
+## Phonological similarity
+
+::: box
+**Levenshtein similarity (Similarity)** between the phonological representation of two word-forms
+:::
+
+**Levenshtein distance**: number of edits (additions, deletions, substitutions) needed to make both strings identical.
+
+$\text{Similarity} = 1-\frac{\text{Levenshtein}(\text{Word}_1,~\text{Word}_2)}{\max(\text{Length}(\text{Word}_1),~\text{Length}(\text{Word}_2))}$
+
+$\text{Similarity}(\textsf{pinɡwino}, \textsf{pɛŋɡwɪn}) = 1-\frac{4}{8} = 0.5$
+
+
+## Phonological similarity
+
+
+![](assets/lexicon-1.png)
+
+---
+
+## Phonological similarity
+
+![](assets/lexicon-2.png)
+
 
 ## Phonological neighbourhood density
 
 ::: box
-English speaker listens to to Dutch word /\textipa{"pINgUIn}/ (*pinguin*)
-English translation: /\textipa{"pENgwIn}/ (penguin)
 
-Given enough phonological similarity (**cognateness**), correct translation?
+**Cross-linguistic Phonological Neighbours (CLPN)**
+: Number of words in the native language that are one phoneme apart from the presented word (phonological neibourhoods).
+
 :::
+
+<br>
+
+Only counting CLPN with **higher lexical frequency** than the correct translation.
+
+## Phonological neighbourhood density
+
+![](assets/lexicon-3.png)
 
 # Experiment 1
 
-English participants listening to Catalan or Spanish
-
-## Experiment 1
-
-Newborns (and adults) preferentially parse the speech signal into [syllable-sized units]{style="background-color: #e3e1e1;"} [e.g, @bijeljac19934; @flo2022sleeping; @luo2007phase; @jusczyk1987representation; @bertoncini1988investigation]
-
-![From @flo2022sleeping.](assets/entrainment.png)
-
-::: {.notes}
-- Syllables seem to be specially important during the first stages of language acquisition
-- Newborns preferentially parse speech into syllables (as opposed to individual phonemes, words, or phrases)
-- What makes syllables so special? 
-:::
+English participants listening to Catalan (**cat-ENG**) or Spanish (**spa-ENG**).
 
 ## Participants
 
-::: {.columns}
-::: {.column width="40%"}
-![](assets/structure.png)
-:::
-::: {.column width="60%"}
-:::
-:::
+* **British English native adults** living in the UK
+* Recruited from Prolific
+* No prior relevant familiarity with Catalan, Spanish or any other Romance language (self-reported).
 
-::: {.notes}
-- The universal structure of a syllable is made of three elements
-- A mandatory nucleus: this is a high-sonority speech sound (predominantly a vowel)
-- Perhaps an onset, made of one or more consonants
-- Perhaps a coda, made of one or more consonant
-:::
+```{r tbl-participants-1}
+#| label: tbl-particpants-1
+tbl_participants <- participants |>
+  mutate(exp = case_when(
+    source == "Experiment" & group != "cat-SPA" ~ "Experiment 1",
+    source == "Experiment" & group == "cat-SPA" ~ "Experiment 2",
+    source == "Questionnaire" ~ "Experiment 3",
+  )) |>
+  summarise(
+    n = n(),
+    n_excluded = sum(!valid_status == "Valid"),
+    across(age, lst(mean, sd, min, max)),
+    l2_lst = list(l2),
+    .by = c(group, exp)
+  ) |>
+  mutate(
+    l2_lst = map(
+      l2_lst,
+      function(x) {
+        y <- table(x)
+        y <- y[names(y) != "None"]
+        y <- paste0(names(y), " (", y, ")")
+        return(y)
+      }
+    ),
+    n_excluded = paste0(n, " (", n_excluded, ")")
+  )
+
+tbl_participants |>
+  filter(exp == "Experiment 1") |>
+  select(-n, -exp) |>
+  gt(rowname_col = "group") |>
+  fmt_number(matches("age")) |>
+  fmt_integer(matches("min|max")) |>
+  cols_merge_uncert(age_mean, age_sd) |>
+  cols_merge_range(age_min, age_max) |>
+  tab_spanner("Age", matches("age")) |>
+  cols_label(
+    group = "Group",
+    n_excluded = "N",
+    age_mean = "Mean ± SD ",
+    age_min = "Range",
+    l2_lst = "L2"
+  ) |>
+  tab_style(
+    cell_text(style = "italic"),
+    cells_column_labels()
+  ) |>
+  tab_style(
+    cell_text(weight = "bold"),
+    cells_column_spanners()
+  ) |>
+  tab_style(
+    cell_text(align = "left"),
+    list(cells_body(), cells_column_labels())
+  ) |>
+  tab_style(
+    cell_text(
+      weight = "bold",
+      align = "center",
+      style = "normal"
+    ),
+    cells_column_labels(c(l2_lst, n_excluded))
+  ) |>
+  tab_footnote(
+    "Number of included participants (number of excluded participants.)",
+    locations = cells_column_labels(n_excluded)
+  ) |>
+  tab_options(table.font.size = 20)
+```
 
 ## Task design
 
-::: {.columns}
-::: {.column width="40%"}
-![](assets/structure.png)
-:::
-::: {.column width="60%"}
-|Structure |Onset  |Nucleus  |Coda  |
-|----------|:-----:|:-------:|:----:|
-| V        |       |a        |      |
-| CV       | t     |a        |      |
-| CVC      | t     |a        |n     |
-| VC       |       |a        |n     |
-:::
-:::
+Implemented in Psychopy, deployed online via Pavlovia.
+
+![](assets/design.png)
 
 ::: {.notes}
-- Same examples of syllables
 :::
 
 
 ## Stimuli
 
-| Structure | Japanese     | Spanish          | English         |
-|-----------|--------------|------------------|-----------------|
-|V          | [u]{style="background-color: #e3e1e1;"}.mi     | [o]{style="background-color: #e3e1e1;"}.jo         | [a]{style="background-color: #e3e1e1;"}.ny        |
-|CV         | [ya]{style="background-color: #e3e1e1;"}.ma.ha | [ca]{style="background-color: #e3e1e1;"}.sa        | [fai]{style="background-color: #e3e1e1;"}.ry      | 
-|CVC        | [hon]{style="background-color: #e3e1e1;"}.da   | [rin]{style="background-color: #e3e1e1;"}.cón      | [con]{style="background-color: #e3e1e1;"}.trol    |
-|CCVC       |              | [fres]{style="background-color: #e3e1e1;"}.co      | [fresh]{style="background-color: #e3e1e1;"}       |
-|CCVCC      |              | [trans]{style="background-color: #e3e1e1;"}.por.te | [shrink]{style="background-color: #e3e1e1;"}     |
-|CCCVCCC    |              |                  | [strengths]{style="background-color: #e3e1e1;"}   |
+* High-frequency Catalan and Spanish nouns
+* Recorded by a Catalan-Spanish proficient bilingual in a child-directed manner
 
-: Adapted from Özer (2024).
-
-::: {.notes}
-- Not all syllabic structures are possible in all languages
-- Some languages impose stricter phonotactical constraints on the specific sounds and number of sounds that can occur at onset or coda
-:::
-
-
-## Data analysis
-
-Can you chunk this word into syllables?
-
-> /likla/
-
-. . .
-
+::: {.columns}
+::: {.column}
 ::: box
-**Maximal Onset Principle (MOP)**:
-
-Consonants are preferably grouped at syllabic onset
+**Catalan list (*n* = 94)**
+:::
+6.67 phon (*SD* = 2.06, *Range* = 2-11)
+English translations: 5.12 char long (*SD* = 1.56, *Range* = 3-9)
+:::
+::: {.column}
+:::box
+**Spanish list  (*n* = 105)**
 :::
 
-* [MOP+]{style="background-color: #ea6212; color: white"}: CV.CCV - /li.kla/
-* [MOP-]{style="background-color: #781478; color: white"}: CVC.CV - /lik.la/
+7.27 phon long (*SD* = 2.05, *Range* = 3-13)
+English translations: 5.29 char long (*SD* = 1.77, *Range* = 3-12).
+:::
+:::
 
 ::: {.notes}
-- However, some constraints to syllabic structure seem to be universal
-- Universal: most, if not all languages, show a preference for following some specific constraints
-- The aim of this project is to investigate the possible role of these universals as an early mechanism for syllabification
+:::
+
+
+## Results
+
+Manual coding of responses as:
+
+::: {.columns}
+::: {.column}
+:::box
+**Valid responses**
+Included in dataset
+:::
+
+- *Correct*^[Typos up to 1 edit distance counted as correct.] (1)
+- *Incorrect* (0)
+:::
+::: {.column}
+::: box
+**Invalid responses**
+Excluded from dataset
+:::
+
+Blank, comments to experimenters, responses in languages other than English, etc.
+:::
 :::
 
 ## Results
 
-Which of these syllables sound good to you?
+```{r tbl-dataset-1}
+#| label: tbl-dataset-1
+sem <- function(x) mean(x) / (sqrt(length(x)))
 
-> /blif/ vs. /lbif/
+#' Proportion adjusted from boundary values (Gelman, Hill & Vehtari, 2020)
+#'
+prop_adj <- function(x, n) {
+  e <- (x + 2) / (n + 4)
+  return(e)
+}
 
-. . .
+#' Adjusted standard error of proportion (Gelman, Hill & Vehtari, 2020)
+#'
+prop_adj_se <- function(x, n) {
+  e <- (x + 2) / (n + 4)
+  se <- sqrt(e * (1 - e) / (n + 4))
+  return(se)
+}
 
-::: box
-**Sonority Sequencing Principle (SSP)**:
+#' Adjusted standard error of proportion (Gelman, Hill & Vehtari, 2020)
+#'
+prop_adj_ci <- function(x, n, .width = 0.95) {
+  e <- (x + 2) / (n + 4)
+  se <- sqrt(e * (1 - e) / (n + 4))
+  ci <- e + qnorm(c((1 - .width) / 2, (1 - (1 - .width) / 2))) * se
+  ci[1] <- ifelse(ci[1] < 0, 0, ci[1]) # truncate at 0
+  ci[2] <- ifelse(ci[2] > 1, 1, ci[2]) # truncate at 1
+  return(ci)
+}
 
-Sonority increases at onset, peaks at nucleus, decreases in coda
-:::
-
-```{r fig-ssp-blif}
-#| label: fig-ssp-blif
-#| fig-height: 1.5
-#| fig-width: 6
-tribble(
-  ~position, ~phoneme, ~sonority,
-  "Onset", "b", 4,
-  "Onset", "l", 10,
-  "Nucleus", "i", 17,
-  "Coda", "f", 7
+tbl_data <- list(
+  "Experiment 1" = dataset_1,
+  "Experiment 2" = dataset_2,
+  "Experiment 3" = dataset_3
 ) |>
-  mutate(phoneme = factor(phoneme, levels = phoneme, ordered = TRUE)) |>
-  ggplot(aes(phoneme, sonority, fill = reorder(position, desc(position)))) +
-  geom_col(colour = "white") +
-  geom_line(aes(group = 1)) +
-  geom_point(show.legend = FALSE) +
-  tribble(
-    ~position, ~phoneme, ~sonority,
-    "Onset", "l", 10,
-    "Onset", "b", 4,
-    "Nucleus", "i", 15,
-    "Coda", "f", 7
+  bind_rows(.id = "exp") |>
+  add_count(exp, group, participant_id, name = "trials") |>
+  summarise(
+    n_trials = n(),
+    correct = sum(correct),
+    .by = c(group, exp, participant_id)
   ) |>
-  mutate(phoneme = factor(phoneme, levels = phoneme, ordered = TRUE)) |>
-  ggplot(aes(phoneme, sonority, fill = reorder(position, desc(position)))) +
-  geom_col(colour = "white") +
-  geom_line(aes(group = 1)) +
-  geom_point(show.legend = FALSE) +
-  theme(axis.title.y = element_blank()) +
-  plot_layout(nrow = 1, guides = "collect") &
-  labs(x = "Phoneme", y = "Sonority Index") &
-  scale_fill_manual(values = clrs) &
-  theme_ggdist(base_family = windowsFonts()$`Roboto Condensed`) &
-  theme(
-    legend.position = "right",
-    axis.title.x = element_blank(),
-    legend.title = element_blank(),
-    plot.background = element_rect(fill = NA)
-  )
+  mutate(correct = prop_adj(correct, n_trials)) |>
+  summarise(across(correct, lst(mean, sd, sem, min, max)),
+    across(n_trials, lst(mean, sum, sd, min, max)),
+    n_participants = dplyr::n_distinct(participant_id),
+    .by = c(group, exp)
+  ) |>
+  relocate(n_participants, matches("correct"))
+
+tbl_data |>
+  filter(exp == "Experiment 1") |>
+  select(-exp) |>
+  gt(
+    rowname_col = "group",
+  ) |>
+  fmt_number(is.numeric, decimals = 2) |>
+  # gtExtras::gt_plt_dist(correct_list, type = "density") |>
+  fmt_integer(c(matches("sum|min|max"), n_participants)) |>
+  fmt_number(matches("correct"), scale_by = 100) |>
+  tab_spanner("Accuracy (%)", matches("correct")) |>
+  tab_spanner("Valid trials", matches("n_trials")) |>
+  cols_merge_range(n_trials_min, n_trials_max) |>
+  cols_merge_range(correct_min, correct_max) |>
+  cols_label(
+    n_trials_sum = "N trials",
+    n_participants = "N",
+    n_trials_mean = "Mean",
+    n_trials_sd = "SD",
+    n_trials_min = "Range",
+    correct_mean = "Mean",
+    correct_sd = "SD",
+    correct_sem = "SE",
+    correct_min = "Range"
+  ) |>
+  grand_summary_rows(
+    columns = is.integer,
+    fns = list(
+      label = md("*Sum*"),
+      id = "totals",
+      fn = "sum"
+    ),
+    fmt = ~ fmt_integer(.)
+  ) |>
+  grand_summary_rows(
+    columns = matches("mean|sd|sem"),
+    fns = list(
+      label = md("*Mean*"),
+      id = "means",
+      fn = "mean"
+    ),
+    fmt = ~ fmt_number(., scale_by = 100)
+  ) |>
+  tab_style(
+    cell_text(align = "center"),
+    cells_column_labels()
+  ) |>
+  tab_style(
+    cell_text(style = "italic"),
+    cells_column_labels()
+  ) |>
+  tab_style(
+    cell_text(weight = "bold"),
+    cells_column_spanners()
+  ) |>
+  tab_style(
+    cell_text(align = "left"),
+    list(cells_body(), cells_column_labels())
+  ) |>
+  tab_options(table.font.size = 20)
 ```
 
 ::: {.notes}
-- However, some constraints to syllabic structure seem to be universal
-- Universal: most, if not all languages, show a preference for following some specific constraints
-- Both universals determine to a large extent the position of syllabic boundaries, and the order of the segments that make up a syllable
 :::
 
 
+## Results
+
+Bayesian generalised linear mixed model (`brms`).
+
+$$
+\begin{aligned}
+&\textbf{Likelihood}  \\
+y_{i} \sim & \text{Bernoulli}(p_{i}) \\
+&\textbf{Parameters}  \\
+\text{Logit}(p_{i}) = &  \beta_{0[p,w]} + \beta_{1[p]} \text{Frequency}_{i} + \beta_{2[p]} \text{PTHN}_i + \\
+&\beta_{3[p]} \text{Similarity}_i + \beta_{4[p]} (\text{PTHN}_i \times \text{Similarity}_i) \\
+\beta_{0-6[p,w]} \sim & \mathcal{N}(\mu_{\beta_{j}}, \sigma_{\beta_{j}}) \text{, for participant } p \text{ in 1, ..., } P \text{ and  word } w \text{ in 1, ..., } W \\
+\beta_{1-6[p]} \sim &  \mathcal{N}(\mu_{\beta_{j}}, \sigma_{\beta_{j}}) \text{, for participant } p \text{ in 1, ..., } P \\
+&\textbf{Prior}  \\
+\mu_{\beta_{p,w}}  \sim &  \mathcal{N}(0, 0.1) \\
+\sigma_{\beta_{p}},  \sigma_{\beta_{w}} \sim & \text{HalfCauchy}(0, 0.1) \\
+\rho_{p}, \rho_{w} \sim & \text{LKJCorr}(8) \\
+\end{aligned}
+$$
+
+
+## Results
+
+```{r fig-epreds-1}
+#| label: fig-epreds-1
+#| cache: false
+#| fig-height: 5
+#| fig-width: 11
+get_epreds <- function(model, data, n = 100,
+                       lv = seq(0, 1, length.out = 100),
+                       neigh_n_h = c(0, 2, 4, 8, 12),
+                       ...) {
+  lv_std <- (lv - mean(data$lv, na.rm = TRUE)) / sd(data$lv, na.rm = TRUE)
+  neigh_n_h_std <- (neigh_n_h - mean(data$neigh_n_h, na.rm = TRUE)) / sd(data$neigh_n_h, na.rm = TRUE)
+  knowledge <- unique(model$data$knowledge)
+  confidence <- unique(model$data$confidence)
+  freq_zipf_2_std <- 0
+  group <- unique(model$data$group)
+  experiment <- unique(model$data$experiment)
+  nd <- expand_grid(freq_zipf_2_std, neigh_n_h_std, lv_std, knowledge, confidence, group, experiment)
+  epreds <- add_epred_draws(nd, model, re_formula = NA, ...)
+  return(epreds)
+}
+
+lv <- seq(0, 1, length.out = 100)
+lv_std <- (lv - mean(dataset_1$lv_std, na.rm = TRUE)) / sd(dataset_1$lv_std, na.rm = TRUE)
+neigh_n_h <- c(0, 2, 4, 8, 12)
+epreds_1 <- get_epreds(exp_1_m0, dataset_1, neigh_n_h = neigh_n_h, lv = lv)
+epreds_1$neigh_n_h_std <- factor(epreds_1$neigh_n_h_std, levels = unique(epreds_1$neigh_n_h_std), labels = paste0(neigh_n_h, " neighbours"), ordered = TRUE)
+
+epreds_1 |>
+  ggplot(aes(lv_std, .epred)) +
+  facet_grid(group ~ neigh_n_h_std) +
+  stat_lineribbon(aes(fill_ramp = after_stat(level)),
+    linewidth = 1 / 2,
+    .width = c(0.95, 0.89, 0.78, 0.67, 0.50)
+  ) +
+  labs(
+    x = "Similarity\n(Levenshtein similarity with correct translation)",
+    y = "p(Correct)",
+    colour = "CrI (%)",
+    fill = "CrI (%)",
+    linetype = "Cross-language neighbourhood density",
+    fill_ramp = "CrI (%)"
+  ) +
+  scale_x_continuous(
+    labels = \(x) scales::percent((x * sd(dataset_1$lv, na.rm = TRUE)) + mean(dataset_1$lv, na.rm = TRUE)),
+    breaks = (seq(0, 1, 0.2) - mean(dataset_1$lv, na.rm = TRUE)) / sd(dataset_1$lv, na.rm = TRUE)
+  ) +
+  scale_y_continuous(labels = scales::percent) +
+  scale_fill_brewer(palette = "Reds") +
+  theme(
+    legend.position = "top",
+    legend.box = "vertical"
+  )
+```
 
 ## Discussion
 
-* Do newborns rely on MOP and SSP to detect syllable boundaries?
-
-> Syllables as an entry gate to language
-
-. . .
-
-* Are these mechanisms shared with non-human animals? (e.g., production)
-
-> Syllables as phylogenetically relevant linguistic units
-
-. . .
-
-
-::: {.notes}
-- The aim of this project is to investigate:
-  1) The possible role of these universals as an early mechanism for syllabification
-  2) The extent to which these mechanisms are shared with other non-human animals
-- The Maximal Onset Principle (MOP) and the Sonority Sequencing Principle (SSP)
-- We will also investigate whether a non-human animal species (Long-Evans rats), which do not develop language, are also sensitive to any of these principles
+::: incremental
+* Word-forms in an unfamiliar language **activate their translation equivalents** in the native language, provided:
+  1) **Some phonological similarity** between both words
+  2) **Few phonological neighbors** of higher frequency
+* Participants surprisingly good at translating words from Catalan and Spanish (two unfamiliar languages)
+* Do speakers of **typologically closer** languages to Catalan and Spanish benefit even more strongly from phonological similarity in the same task?
 :::
 
-## The Gates to Language (GALA) project
+## Discussion
 
-Two lines of research: MOP and SSP
+::: incremental
 
-* Neonates (fNIRS)
-* Infants (fNIRS, eye-tracking, behaviour)
-* Adults (behavioural)
-* Long-Evans rats (behavioural)
+|                  | Typological family | Other examples  |
+|------------------|--------------------|-----------------|
+| English          | Germanic           | Dutch, German   |
+| Catalan, Spanish | Romance            | Italian, French |
+
+English shares fewer phonologically similar translations with Romance languages than Romance languages share with each other.
+
+::: box
+Is the probability of homophonic translations higher in unfamiliar languages from the same **typological family** as the native language?
+:::
+
+:::
+
+::: {.notes}
+:::
 
 
 # Experiment 2
 
-Spanish participants listening to Catalan
-
-## Experiment 2
-
-::: box
-Consonants are preferably grouped at syllable onset.
-:::
-
-* [MOP+]{style="background-color: #ea6212; color: white"}: CV.CCV - /li.kla/  
-* [MOP-]{style="background-color: #781478; color: white"}: CVC.CV - /lik.la/
-
-::: {.notes}
-- The first universal we will investigate is the Maximal Onset Principle (MOP)
-- This principle states that "consonants" are preferably grouped at syllable onset
-- This principle constrains the position of syllabic boundaries
-- If neonates are sensitive to violations of the MOP, it would suggest that they might be using the MOP to syllabify the speech signal from birth
-:::
-
-
-## Participants
-
-* Hearing, full term neonates (fNIRS) and 6-10 mo infants (fNIRS + behavioural)
-* Born/living in the Metropolitan Area of Barcelona (Spain)
-* Mostly Catalan and/or Spanish linguistic background
-
-::: {.notes}
-- We will run an experimental series that involves neonates and infants
-- Neonates will be tested using fNIRS, while infants will be tested using fNIRS and behavioural tasks (like the HeadTurn Preference Procedure)
-- I will focus on the fNIRS testing of neonates and infants, as they follow the same task design
-- Ideally, we'd like to test up to 50 participants per experiment, although power analysis is pending
-- Most of our participants will have a Catalan and/or Spanish background
-:::
-
-
-## Task design
-
-* NIRSport2 (NIRx), CW 760 nm & 850 nm
-* Sampling frequency 20.345 Hz (~0.05 s samples)
-* NIRScap: 8 channels LH, 8 channels RH
-* ROIs: L and R temporal regions
-* Crib testing in neonates, parents' lap in infants (watching cartoons)
-* MNE-NIRS (Python): (1) OD, (2) motion correction (TDDR), (3) band-pass filtering, (4) block segmentation, (5) block averaging, (6) block rejection, (7) participant rejection.
-
-## Stimuli
-
-**Familiarisation/discrimination task:**
-
-1) Familiarise participants with disyllabic CVCCV words
-    - 10 blocks, 6 words each (working on generating as many words as possible)
-
-. . .
-
-2) Test discrimination of artificially segmented familiar words as [MOP+]{style="background-color: #ea6212; color: white"} (CV.CCV) vs. [MOP-]{style="background-color: #781478; color: white"} (CVC.CV):
-    - 4 alternating blocks ([MOP+]{style="background-color: #ea6212; color: white"}/[MOP-]{style="background-color: #781478; color: white"})
-    - 4 non-alternating blocks (2 [MOP+]{style="background-color: #ea6212; color: white"} blocks, 2 [MOP-]{style="background-color: #781478; color: white"} blocks)
-
-## Results
-
-::: box
-**CVCCV words**: Onset + Vowel + Consonant cluster (CC) + Vowel
-:::
-
-. . .
-
-::: columns
-:::: {.column width="40%"}
-| [MOP+]{style="background-color: #ea6212; color: white"} (CV.CCV) | [MOP-]{style="background-color: #781478; color: white"} (CVC.CV)|
-|:-------------:|:------------:|
-|li.kla         |lik.la        |
-|ro.tri         |rot.ri        |
-|po.glu         |pog.lu        |
-
-::::
-:::: {.column width="60%"}
-Some constraints:
-
-- [MOP+]{style="background-color: #ea6212; color: white"}: CC follows **SSP**
-- [MOP+]{style="background-color: #ea6212; color: white"}: CC is phonotactical at onset in speakers' and participants' native language(s)
-- [MOP-]{style="background-color: #781478; color: white"}: C is allowed in coda in speakers' and participants' native language(s)
-::::
-:::
-
-
-## Discussion
-
-![](assets/fam-mop.png){width=100%}
-
-
-# Experiment 3
-
-English participants listening to Catalan or Spanish
-Now with confidence reports
-
-## Experiment 3
-
-- Natural speaker or synthesised speech (e.g., MBROLA)?
-- Variability vs. repetition? More vs. less consonant clusters
-- Linguistic experience at 8-12 months?
-- Familiarisation phase: how many blocks is enough/too much?
-- fNIRS recording during familiarisation? (e.g., capping in between phases)
-
-Research line 2
-
-## Participants
-
-::: columns
-:::: {.column width="40%" .incremental}
-
-> In a syllable, sonority increases toward the peak and decreases toward the margins. [@morelli2003relative]
-
-::::
-:::: {.column width="60%"}
-The biomecanics of the phonatory system constrain the properties of the acoustic signal of (exhalated) animal vocalisations.
-
-![From @tierney2011motor](assets/birds.png)
-::::
-:::
+Spanish participants listening to Catalan (*cat-SPA*)
 
 ---
 
-```{r fig-ssp-bran}
-#| label: fig-ssp-bran
-#| fig-cap: "Sonority Sequencing Principle. Sonority values from @parker201149"
-#| fig-height: 4
-#| fig-width: 6
-tribble(
-  ~position, ~phoneme, ~sonority,
-  "Onset", "b", 1,
-  "Onset", "ɾ", 10,
-  "Nucleus", "a", 17,
-  "Coda", "n", 7
-) |>
-  mutate(phoneme = factor(phoneme, levels = phoneme, ordered = TRUE)) |>
-  ggplot(aes(phoneme, sonority, fill = reorder(position, desc(position)))) +
-  geom_col(colour = "white") +
-  geom_line(aes(group = 1)) +
-  geom_point(show.legend = FALSE) +
-  labs(x = "Phoneme", y = "Sonority Index") +
-  scale_fill_manual(values = clrs) +
-  theme_ggdist() +
-  theme(
-    legend.position = "top",
-    axis.title.x = element_blank(),
-    legend.title = element_blank(),
-    plot.background = element_rect(fill = NA)
-  )
+## Experiment 2
+
+
+```{r tbl-participants-2}
+tbl_participants |>
+  filter(exp == "Experiment 2") |>
+  select(-exp) |>
+  gt(rowname_col = "group") |>
+  fmt_number(matches("age")) |>
+  fmt_integer(matches("min|max")) |>
+  cols_merge_uncert(age_mean, age_sd) |>
+  cols_merge_range(age_min, age_max) |>
+  tab_spanner("Age", matches("age")) |>
+  cols_label(
+    group = "Group",
+    n_excluded = "N",
+    age_mean = "Mean ± SD ",
+    age_min = "Range",
+    l2_lst = "L2"
+  ) |>
+  tab_style(
+    cell_text(style = "italic"),
+    cells_column_labels()
+  ) |>
+  tab_style(
+    cell_text(weight = "bold"),
+    cells_column_spanners()
+  ) |>
+  tab_style(
+    cell_text(align = "left"),
+    list(cells_body(), cells_column_labels())
+  ) |>
+  tab_style(
+    cell_text(
+      weight = "bold",
+      align = "center",
+      style = "normal"
+    ),
+    cells_column_labels(c(l2_lst, n_excluded))
+  ) |>
+  tab_footnote(
+    "Number of included participants (number of excluded participants.)",
+    locations = cells_column_labels(n_excluded)
+  ) |>
+  tab_options(table.font.size = 20)
 ```
 
-## Task design
 
-```{r fig-ssp-bran-grid}
-#| label: fig-sspl-bran-grid
-#| fig-cap: "Sonority profile of the syllable 'bran'"
-praatpicture::praatpicture(
-  "assets/bran.wav",
-  intensity_plotOnSpec = TRUE,
-  intensity_color = clrs[1],
-  font.axis = 2,
-  spec_colors = RColorBrewer::brewer.pal(9, "Greys")[1:7],
-  font = 2,
-  pitch_freqRange = c(0, 700),
-  proportion = c(50, 25, 25),
-  family = "fira",
-  lwd = 2,
-  wave_color = clrs[1],
-)
-```
+Stimuli: Spanish list from Experiment 1.
 
-## Stimuli
+Same as in Experiment 1.
 
-```{r fig-ssp-lbif}
-#| label: fig-ssp-lbif
-#| fig-cap: "Sonority Sequencing Principle. Sonority values from @parker201149"
-tribble(
-  ~position, ~phoneme, ~sonority,
-  "Onset", "l", 9,
-  "Onset", "b", 1,
-  "Nucleus", "i", 15,
-  "Coda", "f", 3
-) |>
-  mutate(phoneme = factor(phoneme, levels = phoneme, ordered = TRUE)) |>
-  ggplot(aes(phoneme, sonority, fill = reorder(position, desc(position)))) +
-  geom_col(colour = "white") +
-  geom_line(aes(group = 1)) +
-  geom_point(show.legend = TRUE) +
-  labs(x = "Phoneme", y = "Sonority Index") +
-  scale_fill_manual(values = clrs) +
-  theme_ggdist() +
-  theme(
-    legend.position = "top",
-    axis.title.x = element_blank(),
-    legend.title = element_blank(),
-    plot.background = element_rect(fill = NA)
-  )
-```
+::: {.notes}
+:::
 
 ## Results
 
-```{r fig-ssp-lbif-grid}
-#| label: fig-sspl-lbif-grid
-#| fig-cap: "Sonority profile of the syllable 'lbif'"
-praatpicture::praatpicture(
-  "assets/lbif.wav",
-  intensity_plotOnSpec = TRUE,
-  intensity_color = clrs[1],
-  font.axis = 2,
-  spec_colors = RColorBrewer::brewer.pal(9, "Greys")[1:7],
-  font = 2,
-  pitch_freqRange = c(0, 700),
-  proportion = c(50, 25, 25),
-  family = "fira",
-  lwd = 2,
-  wave_color = clrs[1],
-)
+```{r tbl-dataset-2}
+#| label: tbl-dataset-2
+tbl_data |>
+  filter(exp == "Experiment 2") |>
+  select(-exp) |>
+  gt(
+    rowname_col = "group",
+  ) |>
+  fmt_number(is.numeric, decimals = 2) |>
+  # gtExtras::gt_plt_dist(correct_list, type = "density") |>
+  fmt_integer(c(matches("sum|min|max"), n_participants)) |>
+  fmt_number(matches("correct"), scale_by = 100) |>
+  tab_spanner("Accuracy (%)", matches("correct")) |>
+  tab_spanner("Valid trials", matches("n_trials")) |>
+  cols_merge_range(n_trials_min, n_trials_max) |>
+  cols_merge_range(correct_min, correct_max) |>
+  cols_label(
+    n_trials_sum = "N trials",
+    n_participants = "N",
+    n_trials_mean = "Mean",
+    n_trials_sd = "SD",
+    n_trials_min = "Range",
+    correct_mean = "Mean",
+    correct_sd = "SD",
+    correct_sem = "SE",
+    correct_min = "Range"
+  ) |>
+  grand_summary_rows(
+    columns = is.integer,
+    fns = list(
+      label = md("*Sum*"),
+      id = "totals",
+      fn = "sum"
+    ),
+    fmt = ~ fmt_integer(.)
+  ) |>
+  grand_summary_rows(
+    columns = matches("mean|sd|sem"),
+    fns = list(
+      label = md("*Mean*"),
+      id = "means",
+      fn = "mean"
+    ),
+    fmt = ~ fmt_number(., scale_by = 100)
+  ) |>
+  tab_style(
+    cell_text(align = "center"),
+    cells_column_labels()
+  ) |>
+  tab_style(
+    cell_text(style = "italic"),
+    cells_column_labels()
+  ) |>
+  tab_style(
+    cell_text(weight = "bold"),
+    cells_column_spanners()
+  ) |>
+  tab_style(
+    cell_text(align = "left"),
+    list(cells_body(), cells_column_labels())
+  ) |>
+  tab_options(table.font.size = 20)
+```
+
+::: {.notes}
+:::
+
+
+## Results
+
+```{r fig-epreds-2}
+#| label: fig-epreds-2
+#| cache: false
+#| fig-height: 3.5
+#| fig-width: 11
+lv <- seq(0, 1, length.out = 100)
+lv_std <- (lv - mean(dataset_2$lv_std, na.rm = TRUE)) / sd(dataset_2$lv_std, na.rm = TRUE)
+neigh_n_h <- c(0, 2, 4, 8, 12)
+epreds_2 <- get_epreds(exp_2_m0, dataset_2, neigh_n_h = neigh_n_h, lv = lv)
+epreds_2$neigh_n_h_std <- factor(epreds_2$neigh_n_h_std, levels = unique(epreds_2$neigh_n_h_std), labels = paste0(neigh_n_h, " neighbours"), ordered = TRUE)
+
+epreds_2 |>
+  ggplot(aes(lv_std, .epred)) +
+  facet_wrap(~neigh_n_h_std, nrow = 1) +
+  stat_lineribbon(aes(fill_ramp = after_stat(level)),
+    linewidth = 1 / 2,
+    .width = c(0.95, 0.89, 0.78, 0.67, 0.50)
+  ) +
+  labs(
+    x = "Similarity\n(Levenshtein similarity with correct translation)",
+    y = "p(Correct)",
+    linetype = "CrI (%)",
+    fill = "CrI (%)",
+    colour = "CrI (%)",
+    fill_ramp = "CrI (%)"
+  ) +
+  scale_x_continuous(
+    labels = \(x) scales::percent((x * sd(dataset_2$lv, na.rm = TRUE)) + mean(dataset_2$lv, na.rm = TRUE)),
+    breaks = (seq(0, 1, 0.2) - mean(dataset_2$lv, na.rm = TRUE)) / sd(dataset_2$lv, na.rm = TRUE)
+  ) +
+  scale_y_continuous(labels = scales::percent) +
+  scale_fill_brewer(palette = "Reds") +
+  theme(
+    legend.position = "top",
+    legend.box = "vertical"
+  )
 ```
 
 ## Discussion
 
-[Proposal]{style="background-color: #e3e1e1;"}:
+::: incremental
+- Spanish natives exploited **phonological similarity** to translate unfamiliar Catalan words
+- Positive impact of phonological similarity more resilient to interference from phonological neighbours 
+- Low-similarity Catalan and Spanish words in Experiments 1 and 2 were responded to with surprising accuracy
+:::
 
-1) Syllables are biologically relevant linguistic units
-2) Language processing at birth is constrained by phylogenetically acquired perception mechanisms (e.g., SSP) [@gomez2014language]
+## Discussion
 
-. . .
+|      Translation                |      IPA                                  |      Accuracy (%)     |      SE     |   |
+|---------------------------------|-------------------------------------------|-----------------------|-------------|---|
+|     Experiment   1 (cat-ENG)    |                                           |                       |             |   |
+|     cavall - horse              |     kə’baʎ - hɔːs                         |     17.14             |     6.37    |   |
+|     llibre - book               |     ˈʎi.βɾə - bʊk                         |     17.14             |     6.37    |   |
+|     camisa - shirt              |     ka.’mi.za - ʃɜːt                      |     16.67             |     6.21    |   |
+|     poma - apple                |     ˈpo.ma - ˈæpl                         |     16.67             |     6.21    |   |
+|     cama - leg                  |     ˈka.mə - lɛg                          |     11.11             |     5.24    |   |
+|     Experiment   2 (spa-ENG)    |                                           |                       |             |   |
+|     pantalon - trousers         |     paŋ.taˈlon - ˈtraʊzəz                 |     77.42             |     7.51    |   |
+|     naranja - orange            |     naˈɾaŋ.xa - ˈɒrɪnʤ                    |     41.94             |     8.86    |   |
+|     leche - milk                |     ˈle.t͡ʃe - mɪlk | 35.48 | 8.59 |    |                       |             |   |
+|     toro - bull                 |     ˈto.ɾo - bʊl                          |     33.33             |     8.61    |   |
+|     libro - book                |     ˈli.βɾo - bʊk                         |     30.00             |     8.37    |   |
+|     cebra - zebra               |     ˈθe.bɾa - ˈziːbrə                     |     29.03             |     8.15    |   |
+|     pan - bread                 |     pan - brɛd                            |     29.03             |     8.15    |   |
+|     pollo - chicken             |     ˈpo.ʎo - ˈʧɪkɪn                       |     26.67             |     8.07    |   |
+|     jirafa - giraffe            |     xi’ɾa.fa - ʤɪˈrɑːf                    |     20.69             |     7.52    |   |
+|     perro - dog                 |     pe.ro - dɒg                           |     16.13             |     6.61    |   |
+|     pluma - feather             |     plu.ma - ˈfɛðə                        |     16.13             |     6.61    |   |
+|     puerta - door               |     pwer.ta - dɔː                         |     16.13             |     6.61    |   |
+|     pie - foot                  |     pje - fʊt                             |     12.90             |     6.02    |   |
+|     caballo - horse             |     kaˈβa.ʎo - hɔːs                       |     10.34             |     5.66    |   |
+|     bocadillo - sandwich        |     bo.kaˈdi.ʎo - ˈsænwɪʤ                 |     10.00             |     5.48    |   |
+|     globo - balloon             |     ˈɡlo.βo - bəˈluːn                     |     10.00             |     5.48    |   |
+|     Experiment   3 (cat-SPA)    |                                           |                       |             |   |
+|     fulla - hoja                |     ˈfu.ʎə - ˈo.xa                        |     30.43             |     9.59    |   |
+|     ull - ojo                   |     uʎ - ˈo.xo                            |     21.74             |     8.60    |   |
+|     got - vaso                  |     ˈɡɔt - ˈba.so                         |     20.00             |     8.00    |   |
+|     entrepa - bocadillo         |     ˌen.tɾəˈpa - bo.kaˈdi.ʎo              |     13.04             |     7.02    |   |
+|     mirall - espejo             |     miˈɾaʎ - es’pe.xo                     |     12.50             |     6.75    |   |
 
-[Hypotheses]{style="background-color: #e3e1e1;"}:
+# Experiment 3
 
-* Sensitivity to SSP plays a role beyond language (non-linguistic sounds)
-* Non-human animals (Long-Evans rats) are sensitive to (violations of) the SSP
+English participants listening to Catalan (*cat-ENG*) or Spanish (*spa-ENG*)
+[Now with confidence reports]
+
+## Experiment 3
+
+Collected additional data about participants' prior familiarity with the presented Catalan and Spanish words
+
+```{r tbl-participants-3}
+tbl_participants |>
+  filter(exp == "Experiment 3") |>
+  select(-exp) |>
+  gt(rowname_col = "group") |>
+  fmt_number(matches("age")) |>
+  fmt_integer(matches("min|max")) |>
+  cols_merge_uncert(age_mean, age_sd) |>
+  cols_merge_range(age_min, age_max) |>
+  tab_spanner("Age", matches("age")) |>
+  cols_label(
+    group = "Group",
+    n_excluded = "N",
+    age_mean = "Mean ± SD ",
+    age_min = "Range",
+    l2_lst = "L2"
+  ) |>
+  tab_style(
+    cell_text(style = "italic"),
+    cells_column_labels()
+  ) |>
+  tab_style(
+    cell_text(weight = "bold"),
+    cells_column_spanners()
+  ) |>
+  tab_style(
+    cell_text(align = "left"),
+    list(cells_body(), cells_column_labels())
+  ) |>
+  tab_style(
+    cell_text(
+      weight = "bold",
+      align = "center",
+      style = "normal"
+    ),
+    cells_column_labels(c(l2_lst, n_excluded))
+  ) |>
+  tab_footnote(
+    "Number of included participants (number of excluded participants.)",
+    locations = cells_column_labels(n_excluded)
+  ) |>
+  tab_options(table.font.size = 20)
+```
+
+
+**Stimuli**: same as in Experiment 1.
+
+**Task design**: same task design as in Experiment 1. After each trial, binary rating of **previous knowledge** of the meaning of the presented word.
+
+## Results
+
+```{r }
+
+```
+
+
+| Group   | Reported knowledge | Confidence (0-8) |
+|---------|--------------------|------------------|
+| cat-ENG | Yes (14.18%)       | 5.05 ± 1.94      |
+|         | No (85.82%)        | 1.13 ± 1.38      |
+| spa-ENG | Yes (7.18%)        | 4.79 ± 1.82      |
+|         | No (92.82%)        | 1.25 ± 1.66      |
+
+We removed answers in which participants reported prior knowledge of word meaning.
+
+## Results
+```{r tbl-dataset-3}
+#| label: tbl-dataset-3
+
+tbl_data |>
+  filter(exp == "Experiment 3") |>
+  select(-exp) |>
+  gt(
+    rowname_col = "group",
+  ) |>
+  fmt_number(is.numeric, decimals = 2) |>
+  # gtExtras::gt_plt_dist(correct_list, type = "density") |>
+  fmt_integer(c(matches("sum|min|max"), n_participants)) |>
+  fmt_number(matches("correct"), scale_by = 100) |>
+  tab_spanner("Accuracy (%)", matches("correct")) |>
+  tab_spanner("Valid trials", matches("n_trials")) |>
+  cols_merge_range(n_trials_min, n_trials_max) |>
+  cols_merge_range(correct_min, correct_max) |>
+  cols_label(
+    n_trials_sum = "N trials",
+    n_participants = "N",
+    n_trials_mean = "Mean",
+    n_trials_sd = "SD",
+    n_trials_min = "Range",
+    correct_mean = "Mean",
+    correct_sd = "SD",
+    correct_sem = "SE",
+    correct_min = "Range"
+  ) |>
+  grand_summary_rows(
+    columns = is.integer,
+    fns = list(
+      label = md("*Sum*"),
+      id = "totals",
+      fn = "sum"
+    ),
+    fmt = ~ fmt_integer(.)
+  ) |>
+  grand_summary_rows(
+    columns = matches("mean|sd|sem"),
+    fns = list(
+      label = md("*Mean*"),
+      id = "means",
+      fn = "mean"
+    ),
+    fmt = ~ fmt_number(., scale_by = 100)
+  ) |>
+  tab_style(
+    cell_text(align = "center"),
+    cells_column_labels()
+  ) |>
+  tab_style(
+    cell_text(style = "italic"),
+    cells_column_labels()
+  ) |>
+  tab_style(
+    cell_text(weight = "bold"),
+    cells_column_spanners()
+  ) |>
+  tab_style(
+    cell_text(align = "left"),
+    list(cells_body(), cells_column_labels())
+  ) |>
+  tab_options(table.font.size = 20)
+```
+
+::: {.notes}
+:::
+
+
+## Results
+
+```{r fig-epreds-3}
+#| label: fig-epreds-3
+#| cache: false
+#| fig-height: 3.5
+#| fig-width: 11
+lv <- seq(0, 1, length.out = 100)
+lv_std <- (lv - mean(dataset_3$lv_std, na.rm = TRUE)) / sd(dataset_3$lv_std, na.rm = TRUE)
+neigh_n_h <- c(0, 2, 4, 8, 12)
+epreds_3 <- get_epreds(exp_2_m0, dataset_3, neigh_n_h = neigh_n_h, lv = lv)
+epreds_3$neigh_n_h_std <- factor(epreds_3$neigh_n_h_std, levels = unique(epreds_3$neigh_n_h_std), labels = paste0(neigh_n_h, " neighbours"), ordered = TRUE)
+
+epreds_3 |>
+  ggplot(aes(lv_std, .epred)) +
+  facet_wrap(~neigh_n_h_std, nrow = 1) +
+  stat_lineribbon(aes(fill_ramp = after_stat(level)),
+    linewidth = 1 / 2,
+    .width = c(0.95, 0.89, 0.78, 0.67, 0.50)
+  ) +
+  labs(
+    x = "Similarity\n(Levenshtein similarity with correct translation)",
+    y = "p(Correct)",
+    linetype = "CrI (%)",
+    fill = "CrI (%)",
+    colour = "CrI (%)",
+    fill_ramp = "CrI (%)"
+  ) +
+  scale_x_continuous(
+    labels = \(x) scales::percent((x * sd(dataset_3$lv, na.rm = TRUE)) + mean(dataset_3$lv, na.rm = TRUE)),
+    breaks = (seq(0, 1, 0.2) - mean(dataset_3$lv, na.rm = TRUE)) / sd(dataset_1$lv, na.rm = TRUE)
+  ) +
+  scale_y_continuous(labels = scales::percent) +
+  scale_fill_brewer(palette = "Reds") +
+  theme(
+    legend.position = "top",
+    legend.box = "vertical"
+  )
+```
+
+
+## Discussion
+
+- After removing responses with reported prior knowledge, results are equivalent to Experiment 1
+- In the absence of prior knwledge, participants exploit phonological similarity to provide correct translations
+
 
 # General discussion
 
-* Hearing, full term neonates (fNIRS) and 6-10 mo infants (fNIRS + behavioural)
-* Born/living in the Metropolitan Area of Barcelona (Spain)
-* Mostly Catalan and/or Spanish linguistic background
-
+::: incremental
+- We explored the psycholinguistic bases of homophonic translation
+- Auditory words from an unfamiliar language trigger native-like dynamics of lexical activation and selection
+- Listeners are able to exploit to non-native speech signal to translate unfamiliar words with surprisingly high accuracy
+- When presented language and native language are typologically close, participants benefited from phonological similarity more strongly 
+- Larger pool of words and word-pairs
+:::
     
 ## {background-image="assets/thanks.png"}
 
