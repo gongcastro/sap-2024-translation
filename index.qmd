@@ -58,32 +58,31 @@ clrs <- c("#ea6212", "#ff001e", "#781478")
 
 {{< video assets/tiktok.mp4 >}}
 
-Source: https://www.youtube.com/watch?v=8FXQ38-ZQK0&t=11s, Tiktok: kegan_stiles
+**Source**: https://www.youtube.com/watch?v=8FXQ38-ZQK0&t=11s
 
 ---
 
 {{< video assets/benny-lava.mp4 >}}
 
-https://www.youtube.com/watch?v=sdyC1BrQd6g&list=PL217-5XHnpx1Tb3FRXqWmPZX2UV4m2I-2
+**Source**: https://www.youtube.com/watch?v=sdyC1BrQd6g&list=PL217-5XHnpx1Tb3FRXqWmPZX2UV4m2I-2
 
 ---
 
-{{< video assets/soramimi.mp4 >}}
+## Soramimi
 
-https://www.youtube.com/watch?v=7bYG7duRYV0&t=1s
+Tamil:
 
----
+> Kalluri vaanil kaayndha nilaavo
+> [The moon (metaphor for 'my love') that scorched the college campus]
 
+English:
 
-{{< video assets/yunomi.mp4 >}}
-
-https://www.youtube.com/watch?v=EW_Q4IYpbWE
-
+> My loony bun is fine, Benny Lava
 
 ## Homophonic translation
 
 - Words/phrases in one language are translated to similar-sounding phrases **without necessarility preserving its meaning**
-- Intentional (literary figure, e.g., poetry) [@gasparov2006semen] or **spontaneous**
+- Literary figure (e.g., poetry) [@gasparov2006semen]
 
 ::: box
 What are the psycholinguistic foundations of spontaneous homophonic translation?
@@ -107,7 +106,7 @@ What are the psycholinguistic foundations of spontaneous homophonic translation?
 
 ## Homophonic translation
 
-**Otake (2017)**: Japanese listeners accommodated English input strings to Japanese phonology [@peperkamp2008perceptual; @dupoux1999epenthetic].
+**Otake (2017)**: Japanese listeners accommodated English input strings to Japanese phonology. [@peperkamp2008perceptual; @dupoux1999epenthetic]
 
 <br>
 
@@ -125,23 +124,33 @@ What are the psycholinguistic foundations of spontaneous homophonic translation?
 
 ## Our study
 
-::: box
-1. More **phonological similarity** (i.e., cognateness), higher probability of correct translation
-2. More **phonological neighbours**, lower probability of correct translation
-:::
+### Translation elicitation task
+
+![](assets/design.png)
 
 
 ## Phonological similarity
 
 ::: box
-**Levenshtein similarity (Similarity)** between the phonological representation of two word-forms
+**Levenshtein similarity (`Similarity`)** between the phonological representation of two word-forms
 :::
 
-**Levenshtein distance**: number of edits (additions, deletions, substitutions) needed to make both strings identical.
+**Levenshtein distance**: number of edits (additions, deletions, substitutions) needed to make both strings identical [@schepens2012distributions; @levenshtein1966binary]
+
+
+## Phonological similarity
+
+::: box
+**Levenshtein similarity (`Similarity`)** between the phonological representation of two word-forms
+:::
+
 
 $\text{Similarity} = 1-\frac{\text{Levenshtein}(\text{Word}_1,~\text{Word}_2)}{\max(\text{Length}(\text{Word}_1),~\text{Length}(\text{Word}_2))}$
 
+
 $\text{Similarity}(\textsf{pinɡwino}, \textsf{pɛŋɡwɪn}) = 1-\frac{4}{8} = 0.5$
+
+
 
 
 ## Phonological similarity
@@ -161,30 +170,40 @@ $\text{Similarity}(\textsf{pinɡwino}, \textsf{pɛŋɡwɪn}) = 1-\frac{4}{8} = 0
 ::: box
 
 **Cross-linguistic Phonological Neighbours (CLPN)**
-: Number of words in the native language that are one phoneme apart from the presented word (phonological neibourhoods).
+: Number of words in the native language that are one phoneme apart from the presented word (phonological neibourhoods). [@van1998orthographic; @luce1998recognizing]
 
 :::
 
 <br>
 
-Only counting CLPN with **higher lexical frequency** than the correct translation.
+Only counting CLPN with **higher lexical frequency** than the correct translation. [@marian2012clearpond]
 
 ## Phonological neighbourhood density
 
 ![](assets/lexicon-3.png)
 
+## Hypotheses
+
+::: box
+1. More **phonological similarity** (i.e., cognateness), higher probability of correct translation
+2. More **phonological neighbours**, lower probability of correct translation
+:::
+
+
 # Experiment 1
 
-English participants listening to Catalan (**cat-ENG**) or Spanish (**spa-ENG**).
+English-native participants listening to:
+
+- Catalan (`cat-ENG`)
+- Spanish (`spa-ENG`)
 
 ## Participants
 
-* **British English native adults** living in the UK
-* Recruited from Prolific
-* No prior relevant familiarity with Catalan, Spanish or any other Romance language (self-reported).
+* **British English native adults** living in the UK (Prolific) [@palan2018prolific]
+* No prior familiarity with Catalan, Spanish or any other Romance language (self-reported)
 
-```{r tbl-participants-1}
-#| label: tbl-particpants-1
+```{r participants-1}
+#| label: particpants-1
 tbl_participants <- participants |>
   mutate(exp = case_when(
     source == "Experiment" & group != "cat-SPA" ~ "Experiment 1",
@@ -256,7 +275,7 @@ tbl_participants |>
 
 ## Task design
 
-Implemented in Psychopy, deployed online via Pavlovia.
+Implemented in Psychopy, deployed online via Pavlovia. [@peirce2019psychopy2]
 
 ![](assets/design.png)
 
@@ -275,6 +294,7 @@ Implemented in Psychopy, deployed online via Pavlovia.
 **Catalan list (*n* = 94)**
 :::
 6.67 phon (*SD* = 2.06, *Range* = 2-11)
+
 English translations: 5.12 char long (*SD* = 1.56, *Range* = 3-9)
 :::
 ::: {.column}
@@ -283,6 +303,7 @@ English translations: 5.12 char long (*SD* = 1.56, *Range* = 3-9)
 :::
 
 7.27 phon long (*SD* = 2.05, *Range* = 3-13)
+
 English translations: 5.29 char long (*SD* = 1.77, *Range* = 3-12).
 :::
 :::
@@ -298,17 +319,15 @@ Manual coding of responses as:
 ::: {.columns}
 ::: {.column}
 :::box
-**Valid responses**
-Included in dataset
+**Valid responses** (included)
 :::
 
-- *Correct*^[Typos up to 1 edit distance counted as correct.] (1)
-- *Incorrect* (0)
+- *Correct*^[Typos up to 1 edit distance counted as correct.] (`1`)
+- *Incorrect* (`1`)
 :::
 ::: {.column}
 ::: box
-**Invalid responses**
-Excluded from dataset
+**Invalid responses** (excluded)
 :::
 
 Blank, comments to experimenters, responses in languages other than English, etc.
@@ -317,8 +336,8 @@ Blank, comments to experimenters, responses in languages other than English, etc
 
 ## Results
 
-```{r tbl-dataset-1}
-#| label: tbl-dataset-1
+```{r dataset-1}
+#| label: dataset-1
 sem <- function(x) mean(x) / (sqrt(length(x)))
 
 #' Proportion adjusted from boundary values (Gelman, Hill & Vehtari, 2020)
@@ -435,29 +454,22 @@ tbl_data |>
 
 ## Results
 
-Bayesian generalised linear mixed model (`brms`).
+Bayesian generalised linear mixed model (`brms`):
 
-$$
-\begin{aligned}
-&\textbf{Likelihood}  \\
-y_{i} \sim & \text{Bernoulli}(p_{i}) \\
-&\textbf{Parameters}  \\
-\text{Logit}(p_{i}) = &  \beta_{0[p,w]} + \beta_{1[p]} \text{Frequency}_{i} + \beta_{2[p]} \text{PTHN}_i + \\
-&\beta_{3[p]} \text{Similarity}_i + \beta_{4[p]} (\text{PTHN}_i \times \text{Similarity}_i) \\
-\beta_{0-6[p,w]} \sim & \mathcal{N}(\mu_{\beta_{j}}, \sigma_{\beta_{j}}) \text{, for participant } p \text{ in 1, ..., } P \text{ and  word } w \text{ in 1, ..., } W \\
-\beta_{1-6[p]} \sim &  \mathcal{N}(\mu_{\beta_{j}}, \sigma_{\beta_{j}}) \text{, for participant } p \text{ in 1, ..., } P \\
-&\textbf{Prior}  \\
-\mu_{\beta_{p,w}}  \sim &  \mathcal{N}(0, 0.1) \\
-\sigma_{\beta_{p}},  \sigma_{\beta_{w}} \sim & \text{HalfCauchy}(0, 0.1) \\
-\rho_{p}, \rho_{w} \sim & \text{LKJCorr}(8) \\
-\end{aligned}
-$$
+* Predictors: `freq + CLPN * similarity * group`
+* Groups:
+  - Participant: `(1 + freq + CLPN * similarity | participant)`
+  - Translation: `(1 | translation)`
+
+Posterior distribution of marginal effects
+: Predictions of most likely model, given our data
+
 
 
 ## Results
 
-```{r fig-epreds-1}
-#| label: fig-epreds-1
+```{r epreds-1}
+#| label: epreds-1
 #| cache: false
 #| fig-height: 5
 #| fig-width: 11
@@ -491,12 +503,12 @@ epreds_1 |>
     .width = c(0.95, 0.89, 0.78, 0.67, 0.50)
   ) +
   labs(
-    x = "Similarity\n(Levenshtein similarity with correct translation)",
+    x = "Similarity (Levenshtein similarity with correct translation)",
     y = "p(Correct)",
-    colour = "CrI (%)",
-    fill = "CrI (%)",
+    colour = "Credible interval",
+    fill = "Credible interval",
     linetype = "Cross-language neighbourhood density",
-    fill_ramp = "CrI (%)"
+    fill_ramp = "Credible interval"
   ) +
   scale_x_continuous(
     labels = \(x) scales::percent((x * sd(dataset_1$lv, na.rm = TRUE)) + mean(dataset_1$lv, na.rm = TRUE)),
@@ -543,14 +555,16 @@ Is the probability of homophonic translations higher in unfamiliar languages fro
 
 # Experiment 2
 
-Spanish participants listening to Catalan (*cat-SPA*)
+Spanish participants listening to:
+
+- Catalan (`cat-SPA`)
 
 ---
 
 ## Experiment 2
 
 
-```{r tbl-participants-2}
+```{r participants-2}
 tbl_participants |>
   filter(exp == "Experiment 2") |>
   select(-exp) |>
@@ -595,17 +609,17 @@ tbl_participants |>
 ```
 
 
-Stimuli: Spanish list from Experiment 1.
+**Stimuli**: Spanish list from Experiment 1.
 
-Same as in Experiment 1.
+**Task design**: Same as in Experiment 1.
 
 ::: {.notes}
 :::
 
 ## Results
 
-```{r tbl-dataset-2}
-#| label: tbl-dataset-2
+```{r dataset-2}
+#| label: dataset-2
 tbl_data |>
   filter(exp == "Experiment 2") |>
   select(-exp) |>
@@ -674,8 +688,8 @@ tbl_data |>
 
 ## Results
 
-```{r fig-epreds-2}
-#| label: fig-epreds-2
+```{r epreds-2}
+#| label: epreds-2
 #| cache: false
 #| fig-height: 3.5
 #| fig-width: 11
@@ -693,12 +707,12 @@ epreds_2 |>
     .width = c(0.95, 0.89, 0.78, 0.67, 0.50)
   ) +
   labs(
-    x = "Similarity\n(Levenshtein similarity with correct translation)",
+    x = "Similarity (Levenshtein similarity with correct translation)",
     y = "p(Correct)",
-    linetype = "CrI (%)",
-    fill = "CrI (%)",
-    colour = "CrI (%)",
-    fill_ramp = "CrI (%)"
+    linetype = "Credible interval",
+    fill = "Credible interval",
+    colour = "Credible interval",
+    fill_ramp = "Credible interval"
   ) +
   scale_x_continuous(
     labels = \(x) scales::percent((x * sd(dataset_2$lv, na.rm = TRUE)) + mean(dataset_2$lv, na.rm = TRUE)),
@@ -756,14 +770,18 @@ epreds_2 |>
 
 # Experiment 3
 
-English participants listening to Catalan (*cat-ENG*) or Spanish (*spa-ENG*)
-[Now with confidence reports]
+English participants listening to:
+
+- Catalan (`cat-ENG`)
+- Spanish (`spa-ENG`)
+
+Now with confidence reports
 
 ## Experiment 3
 
-Collected additional data about participants' prior familiarity with the presented Catalan and Spanish words
+Additional data about prior familiarity with Catalan/Spanish words
 
-```{r tbl-participants-3}
+```{r participants-3}
 tbl_participants |>
   filter(exp == "Experiment 3") |>
   select(-exp) |>
@@ -814,10 +832,6 @@ tbl_participants |>
 
 ## Results
 
-```{r }
-
-```
-
 
 | Group   | Reported knowledge | Confidence (0-8) |
 |---------|--------------------|------------------|
@@ -826,12 +840,13 @@ tbl_participants |>
 | spa-ENG | Yes (7.18%)        | 4.79 ± 1.82      |
 |         | No (92.82%)        | 1.25 ± 1.66      |
 
-We removed answers in which participants reported prior knowledge of word meaning.
+<br>
+
+Answers in which participants reported prior knowledge, removed from analyses.
 
 ## Results
-```{r tbl-dataset-3}
-#| label: tbl-dataset-3
-
+```{r dataset-3}
+#| label: dataset-3
 tbl_data |>
   filter(exp == "Experiment 3") |>
   select(-exp) |>
@@ -900,8 +915,8 @@ tbl_data |>
 
 ## Results
 
-```{r fig-epreds-3}
-#| label: fig-epreds-3
+```{r epreds-3}
+#| label: epreds-3
 #| cache: false
 #| fig-height: 3.5
 #| fig-width: 11
@@ -919,12 +934,12 @@ epreds_3 |>
     .width = c(0.95, 0.89, 0.78, 0.67, 0.50)
   ) +
   labs(
-    x = "Similarity\n(Levenshtein similarity with correct translation)",
+    x = "Similarity (Levenshtein similarity with correct translation)",
     y = "p(Correct)",
-    linetype = "CrI (%)",
-    fill = "CrI (%)",
-    colour = "CrI (%)",
-    fill_ramp = "CrI (%)"
+    linetype = "Credible interval",
+    fill = "Credible interval",
+    colour = "Credible interval",
+    fill_ramp = "Credible interval"
   ) +
   scale_x_continuous(
     labels = \(x) scales::percent((x * sd(dataset_3$lv, na.rm = TRUE)) + mean(dataset_3$lv, na.rm = TRUE)),
@@ -957,6 +972,27 @@ epreds_3 |>
     
 ## {background-image="assets/thanks.png"}
 
-## References
+# Appendix
 
+## Model detaiils
+
+Bayesian generalised linear mixed model (`brms`):
+
+$$
+\begin{aligned}
+&\textbf{Likelihood}  \\
+y_{i} \sim & \text{Bernoulli}(p_{i}) \\
+&\textbf{Parameters}  \\
+\text{Logit}(p_{i}) = &  \beta_{0[p,w]} + \beta_{1[p]} \text{Frequency}_{i} + \beta_{2[p]} \text{CLPN}_i + \\
+&\beta_{3[p]} \text{Similarity}_i + \beta_{4[p]} (\text{CLPN}_i \times \text{Similarity}_i) \\
+\beta_{0-6[p,w]} \sim & \mathcal{N}(\mu_{\beta_{j}}, \sigma_{\beta_{j}}) \text{, for participant } p \text{ in 1, ..., } P \text{ and  word } w \text{ in 1, ..., } W \\
+\beta_{1-6[p]} \sim &  \mathcal{N}(\mu_{\beta_{j}}, \sigma_{\beta_{j}}) \text{, for participant } p \text{ in 1, ..., } P \\
+&\textbf{Prior}  \\
+\mu_{\beta_{p,w}}  \sim &  \mathcal{N}(0, 0.1) \\
+\sigma_{\beta_{p}},  \sigma_{\beta_{w}} \sim & \text{HalfCauchy}(0, 0.1) \\
+\rho_{p}, \rho_{w} \sim & \text{LKJCorr}(8) \\
+\end{aligned}
+$$
+
+## References
 

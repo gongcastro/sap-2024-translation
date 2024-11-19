@@ -10,14 +10,12 @@ format:
     #qr-code: assets/img/qr-code.png
     github: gongcastro
     twitter: gongcastro
-    date: 2024/09/24
+    date: 2024/11/19
     conference: sap2024translation
 
 resources: 
     - "assets/benny-lava.mp4"
-    - "assets/soramimi.mp4.wav"
     - "assets/tiktok.mp4.wav"
-    - "assets/yunomi.mp4.wav"
 
 author:
   - name: "Gonzalo García-Castro"
