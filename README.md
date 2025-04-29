@@ -1,3 +1,3 @@
-# padova2024mop
+# sap-2025-translation
 
-Slides for the presentation at Università di Padova on September 24th 2024.
+Slides for the presentation at Speech Acquisition and Perception group at Universitat Pompeu Fabra.
